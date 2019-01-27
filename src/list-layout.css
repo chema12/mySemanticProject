@@ -1,0 +1,15 @@
+.list-layout {
+    text-align: left
+}
+h2.list-layout {
+    color: red;
+    text-decoration: underline; 
+}
+.mainItem {
+    font-weight: bold;
+    font-size: 40px; 
+}
+.secondaryItem {
+    font-size: 30px; 
+    font-style: italic;
+}
