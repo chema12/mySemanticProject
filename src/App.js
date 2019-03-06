@@ -1,47 +1,114 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import ListLayout from './list-layout';
 import './list-layout.css';
-import List from './list';
+import Label from './label';
+import Button from './button';
+import ButtonLayout from './button-layout';
+import ResultLayout from './result-layout';
+
+const v1 = Math.floor(Math.random() * 100);
+const v2 = Math.floor(Math.random() * 100);
+const v3 = Math.floor(Math.random() * 100);
+const propAnswer = Math.floor(Math.random() * 3) + v1 + v2 + v3;
 
 class App extends Component {
-  render() {
-    const lista = [];
-    for (let i = 1; i <= 5; i++) {
-      let existUsers = false;
-      const filaUsuario = (
-        <div key={i+'-div'} className="list-layout">
-          <List key={this.props.data.movies[i].name} mainItem etiqueta={`${this.props.data.movies[i].name}`} />
-          <List key={this.props.data.movies[i].name+'intro'} level={1} etiqueta={'Liked By:'} />
-          {            
-            this.props.data.profiles.map((element, index) => {              
-              if(element.favoriteMovieID == i) {
-                existUsers = true;
-                return (
-                  <List key={i+index+'B'} level={2} etiqueta={`- ${this.props.data.users[element.userID].name}`}/>  
-                );
-              }
-            })
-          }
-        </div>
-      );
-      const withoutUsers = (
-        <div key={i+'-div'} className="list-layout">
-          <List key={this.props.data.movies[i].name} mainItem etiqueta={this.props.data.movies[i].name} />
-          <List key={this.props.data.movies[i].name+'outOfUsers'} level={1} etiqueta={'None of the current users liked this movie'} />
-        </div>
-      );          
-      if (existUsers) lista.push(filaUsuario);
-      else lista.push(withoutUsers);
+  state = {
+    v1,
+    v2,
+    v3,
+    propAnswer,
+    rightAnswer: 0,
+    totalAnswer: 0,
+    ratio: 0,
+    labelColor: 'white'
+  }
+
+  handleClick = (choice) => {
+    let rightAnswer = this.state.rightAnswer;
+    let totalAnswer = this.state.totalAnswer;
+    let ratio = 0;
+    if (choice) {
+      if (propAnswer === v1+v2+v3) {
+        rightAnswer += 1;
+        totalAnswer += 1;
+        ratio = rightAnswer / totalAnswer * 100;
+        this.setState({
+          rightAnswer,
+          totalAnswer,
+          ratio
+        });
+      } else {
+        totalAnswer += 1;
+        ratio = rightAnswer / totalAnswer * 100;
+        this.setState({
+          totalAnswer,
+          ratio
+        });
+      }
+    } else {
+      if (propAnswer === v1+v2+v3) {
+        totalAnswer += 1;
+        ratio = rightAnswer / totalAnswer * 100;
+        this.setState({
+          totalAnswer,
+          ratio
+        });
+      } else {
+        rightAnswer += 1;
+        totalAnswer += 1;
+        ratio = rightAnswer / totalAnswer * 100;
+        this.setState({
+          rightAnswer,
+          totalAnswer,
+          ratio
+        });
+      }
     }
+    if (ratio > 50) {
+      this.setState({
+        labelColor: 'green'
+      });
+    } else if (ratio == 50) {
+      this.setState({
+        labelColor: 'yellow'
+      });
+    } else {
+      this.setState({
+        labelColor: 'red'
+      });
+    }
+    this.setState({
+      v1: Math.floor(Math.random() * 100),
+      v2: Math.floor(Math.random() * 100),
+      v3: Math.floor(Math.random() * 100),
+      propAnswer: Math.floor(Math.random() * 3) + v1 + v2 + v3
+    });
+  };
+
+  render() {
     return (
       <div className="App">
         <header className="App-header">
           <ListLayout>
-            <h2 className="list-layout">LISTA DE PELÍCULAS</h2>
-            {lista}
-          </ListLayout>          
+            <h2 className="list-layout">MATEMÁTICAS MENTALES</h2>
+            <Label value={this.state.v1}/>
+            <Label value={'+'}/>
+            <Label value={this.state.v2}/>
+            <Label value={'+'}/>
+            <Label value={this.state.v3}/>
+            <Label value={'='}/>
+            <Label value={this.state.propAnswer}/>
+          </ListLayout>
+          <ButtonLayout>
+            <Button className={'right'} etiqueta={'Right ' + String.fromCodePoint(0x1F44D)} onClick={() => this.handleClick(true)}/>
+            <Button className={'wrong'} etiqueta={'Wrong ' + String.fromCodePoint(0x1F44E)} onClick={() => this.handleClick(false)}/>
+          </ButtonLayout>
+          <ResultLayout>
+            <Label value={'Resultado: '}/>
+            <Label value={this.state.rightAnswer + '/' + this.state.totalAnswer }/>
+            <Label value={this.state.ratio} style={{marginLeft: 50+'px', color: this.state.labelColor}}/>            
+          </ResultLayout>          
         </header>
       </div>
     );

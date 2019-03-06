@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './list-layout.css';
 
-class ListLayout extends Component {
+class ResultLayout extends Component {
     render() {
         return (
             <div className='list-label'>
@@ -11,4 +11,4 @@ class ListLayout extends Component {
     }
 }
 
-export default ListLayout;
+export default ResultLayout;

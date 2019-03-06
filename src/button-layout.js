@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import './list-layout.css';
 
-class ListLayout extends Component {
+class ButtonLayout extends Component {
     render() {
         return (
-            <div className='list-label'>
+            <div className='list-button'>
                 {this.props.children}
             </div>            
         );
     }
 }
 
-export default ListLayout;
+export default ButtonLayout;
